@@ -1,14 +1,18 @@
 package com.webServices.course.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import org.hibernate.annotations.ManyToAny;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Table;
 
 
@@ -25,20 +29,19 @@ public class Product implements Serializable{
 	private Double price;
 	private String imgUrl;
 	
-	@ManyToOne
-	@JoinColumn(name = "categories_id")
-	private Category categories;
+	@ManyToAny
+	@JoinTable(joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private Set<Category> categories = new HashSet<>();
 	
 	public Product() {}
 
-	public Product(Long id, String name, String description, Double price, String imgUrl, Category categories) {
+	public Product(Long id, String name, String description, Double price, String imgUrl) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.imgUrl = imgUrl;
-		this.categories = categories;
 	}
 
 	public Long getId() {
@@ -80,8 +83,8 @@ public class Product implements Serializable{
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
 	}
-
-	public Category getCategories() {
+	
+	public Set<Category> getCategory() {
 		return categories;
 	}
 
